@@ -70,11 +70,11 @@ packages/cccdev-template-3x
     │
     ▼
 background.js
-    │  chrome.scripting.executeScript({ world: 'MAIN', func: toggleRemoteDevTools })
+    │  chrome.scripting.executeScript({ world: 'MAIN', func: runRemoteDevTools })
     ▼
 遊戲頁 MAIN world
-    │  無 window.cc → alert，不開啟視窗
-    │  彈出被攔 → alert
+    │  無 window.cc → console.error，不開啟視窗
+    │  彈出被攔 → console.error
     │  已有視窗 → 關閉（再開則還原尺寸）
     ▼
 window.open(固定尺寸、無工具列)
@@ -88,7 +88,7 @@ window.open(固定尺寸、無工具列)
 
 頁面重新整理 / 關閉時，遊戲頁上的 `pagehide` / `beforeunload` 監聽會 `devWin.close()`。
 
-再次點擊同一頁：若彈窗仍在則關閉；已關閉則重新偵測 `cc` 並開啟。安裝後不會對任何頁面注入腳本，直到使用者第一次點擊擴充圖示。
+再次點擊同一頁：若彈窗仍在則關閉；已關閉則重新偵測 `cc` 並開啟。成功開啟後把該網域寫入 `chrome.storage.local`（`autoOpenOrigins`）；`tabs.onUpdated` 在頁面 `complete` 時若該網域已記錄，則以 `open` 模式注入並等到引擎就緒（scene / `game_inited`，否則 `cc` 出現後 12 秒）再 `window.open`。點圖示關閉或使用者關掉彈窗（MAIN 偵測後 `postMessage` → isolated bridge）會清掉該網域紀錄。安裝後仍不會對未記錄的網域注入。
 
 ## 5. DevTools UI 模組
 
