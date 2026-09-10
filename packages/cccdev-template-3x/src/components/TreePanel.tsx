@@ -10,7 +10,7 @@ import {
 } from '../store';
 import { isReady, getScene, resolveNodeByPath } from '../engine';
 
-// ── 构建树数据 ─────────────────────────────────────────────
+// ── 建立樹資料 ─────────────────────────────────────────────
 function buildTree(children: any[], path: string[]): TreeNode[] {
   const result: TreeNode[] = [];
   for (const ccNode of children) {
@@ -27,7 +27,7 @@ function buildTree(children: any[], path: string[]): TreeNode[] {
   return result;
 }
 
-// ── 搜索：收集所有匹配节点（扁平列表）─────────────────────
+// ── 搜尋：收集所有符合節點（扁平列表）─────────────────────
 interface FlatMatch {
   node: TreeNode;
   depth: number;
@@ -45,7 +45,7 @@ function collectMatches(nodes: TreeNode[], query: string, depth = 0): FlatMatch[
   return result;
 }
 
-// ── 搜索时自动展开匹配节点的所有祖先 ─────────────────────
+// ── 搜尋時自動展開符合節點的所有祖先 ─────────────────────
 function expandAncestors(nodes: TreeNode[], query: string): Set<string> {
   const q = query.toLowerCase();
   const toExpand = new Set<string>();
@@ -66,7 +66,7 @@ function expandAncestors(nodes: TreeNode[], query: string): Set<string> {
   return toExpand;
 }
 
-// ── 在树中查找目标节点的 uuid 路径 ───────────────────────
+// ── 在樹中尋找目標節點的 uuid 路徑 ───────────────────────
 function findPathInTree(nodes: TreeNode[], targetUuid: string): string[] | undefined {
   for (const node of nodes) {
     if (node.uuid === targetUuid) return [node.uuid];
@@ -76,7 +76,7 @@ function findPathInTree(nodes: TreeNode[], targetUuid: string): string[] | undef
   return undefined;
 }
 
-// ── 高亮关键词 ────────────────────────────────────────────
+// ── 醒目標示關鍵詞 ────────────────────────────────────────────
 function HighlightText({ text, query }: { text: string; query: string }) {
   if (!query) return <span class="tree-label">{text}</span>;
   const idx = text.toLowerCase().indexOf(query.toLowerCase());
@@ -90,7 +90,7 @@ function HighlightText({ text, query }: { text: string; query: string }) {
   );
 }
 
-// ── 搜索结果行（支持展开/折叠子节点）─────────────────────
+// ── 搜尋結果行（支援展開/摺疊子節點）─────────────────────
 function SearchResultItem({ node, query }: { node: TreeNode; query: string }) {
   const expanded = useComputed(() => expandedUuids.value.has(node.uuid));
   const isSelected = useComputed(() => selectedNode.value?.uuid === node.uuid);
@@ -141,7 +141,7 @@ function SearchResultItem({ node, query }: { node: TreeNode; query: string }) {
   );
 }
 
-// ── 单个树节点组件 ─────────────────────────────────────────
+// ── 單一樹節點元件 ─────────────────────────────────────────
 interface TreeNodeItemProps {
   node: TreeNode;
   depth: number;
@@ -201,19 +201,19 @@ function TreeNodeItem({ node, depth }: TreeNodeItemProps) {
   );
 }
 
-// ── TreePanel 主组件 ───────────────────────────────────────
+// ── TreePanel 主元件 ───────────────────────────────────────
 export function TreePanel() {
   const initialized = useSignal(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const query = useComputed(() => searchQuery.value.trim());
 
-  // 搜索结果（扁平列表）
+  // 搜尋結果（扁平列表）
   const searchResults = useComputed(() => {
     if (!query.value) return null;
     return collectMatches(treeData.value, query.value);
   });
 
-  // 搜索关键词变化时，自动展开匹配节点的祖先
+  // 搜尋關鍵詞變化時，自動展開符合節點的祖先
   useEffect(() => {
     if (!query.value) return;
     const ancestors = expandAncestors(treeData.value, query.value);
@@ -254,7 +254,7 @@ export function TreePanel() {
     searchQuery.value = (e.target as HTMLInputElement).value;
   }, []);
 
-  /** 清空搜索并定位到当前选中节点 */
+  /** 清空搜尋並定位到目前選取節點 */
   const clearAndLocate = useCallback(() => {
     const selected = selectedNode.value;
     searchQuery.value = '';
@@ -262,16 +262,16 @@ export function TreePanel() {
 
     if (!selected) return;
 
-    // 在树中找到选中节点的 path，展开所有祖先
+    // 在樹中找到選取節點的 path，展開所有祖先
     const path: string[] | undefined = findPathInTree(treeData.value, selected.uuid);
     if (path && path.length > 1) {
       const next = new Set(expandedUuids.value);
-      // 展开除最后一个（自身）之外的所有祖先
+      // 展開除最後一個（自身）之外的所有祖先
       for (let i = 0; i < path.length - 1; i++) next.add(path[i]);
       expandedUuids.value = next;
     }
 
-    // 等 DOM 更新后滚动到选中节点
+    // 等 DOM 更新後捲動到選取節點
     requestAnimationFrame(() => {
       const scrollContainer = inputRef.current
         ?.closest('.tree-panel')
@@ -281,7 +281,7 @@ export function TreePanel() {
     });
   }, []);
 
-  // Esc 清空搜索并定位
+  // Esc 清空搜尋並定位
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -293,16 +293,16 @@ export function TreePanel() {
 
   return (
     <div class="tree-panel">
-      <div class="panel-header">节点树</div>
+      <div class="panel-header">節點樹</div>
 
-      {/* 搜索栏 */}
+      {/* 搜尋欄 */}
       <div class="tree-search-bar">
         <span class="tree-search-icon">⌕</span>
         <input
           ref={inputRef}
           class="tree-search-input"
           type="text"
-          placeholder="搜索节点…"
+          placeholder="搜尋節點…"
           value={searchQuery.value}
           onInput={handleSearchInput}
           onKeyDown={handleKeyDown}
@@ -318,21 +318,21 @@ export function TreePanel() {
         {!initialized.value ? (
           <div class="tree-empty">等待引擎初始化…</div>
         ) : searchResults.value !== null ? (
-          // 搜索模式：扁平结果列表
+          // 搜尋模式：扁平結果列表
           searchResults.value.length === 0 ? (
-            <div class="tree-empty">未找到匹配节点</div>
+            <div class="tree-empty">找不到符合節點</div>
           ) : (
             <>
-              <div class="tree-search-count">{searchResults.value.length} 个结果</div>
+              <div class="tree-search-count">{searchResults.value.length} 個結果</div>
               {searchResults.value.map(({ node }) => (
                 <SearchResultItem key={node.uuid} node={node} query={query.value} />
               ))}
             </>
           )
         ) : treeData.value.length === 0 ? (
-          <div class="tree-empty">场景为空</div>
+          <div class="tree-empty">場景為空</div>
         ) : (
-          // 正常树模式
+          // 正常樹模式
           treeData.value.map((node) => <TreeNodeItem key={node.uuid} node={node} depth={0} />)
         )}
       </div>

@@ -34,7 +34,7 @@ export function ComponentPanel({ name, component, updateKey: _updateKey }: Compo
         <span class="comp-arrow">{collapsed.value ? '›' : '⌄'}</span>
         <button
           class="icon-btn"
-          title="输出到控制台"
+          title="輸出到主控台"
           onClick={(e) => {
             e.stopPropagation();
             outputToConsole(component);
@@ -43,14 +43,22 @@ export function ComponentPanel({ name, component, updateKey: _updateKey }: Compo
           &gt;
         </button>
       </div>
-      {!collapsed.value && model && (
+      {!collapsed.value && model && model.props.length > 0 && (
         <div class="comp-props">
           {model.props.map((prop) => (
-            <PropItem key={prop.key} model={model} propName={prop.name} propKey={prop.key} />
+            <PropItem
+              key={prop.key}
+              model={model}
+              propName={prop.name}
+              propKey={prop.key}
+              inspectableOnly={!!model.inspectableOnly}
+            />
           ))}
         </div>
       )}
-      {!collapsed.value && !model && <div class="comp-empty">（无可编辑属性）</div>}
+      {!collapsed.value && (!model || model.props.length === 0) && (
+        <div class="comp-empty">（無可編輯屬性）</div>
+      )}
     </div>
   );
 }

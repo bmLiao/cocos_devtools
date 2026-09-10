@@ -1,9 +1,9 @@
-/** 弹窗内优先用注入的 window.cc，否则回退到 opener（游戏页） */
+/** 彈窗內優先用注入的 window.cc，否則回退到 opener（遊戲頁） */
 function gameWindow(): any {
   return (window as any).opener ?? window;
 }
 
-/** 获取 Cocos 引擎全局对象 */
+/** 取得 Cocos 引擎全域物件 */
 export const cc = (): any => (window as any)['cc'] ?? gameWindow()['cc'];
 
 export const getScene = (): any => cc()?.director?.getScene();
@@ -23,7 +23,7 @@ function getProfiler(c: any): any {
   return c?.profiler ?? c?.internal?.profiler ?? null;
 }
 
-/** 在游戏页启动 profiler 统计（未 showStats 时 stats 为 null） */
+/** 在遊戲頁啟動 profiler 統計（未 showStats 時 stats 為 null） */
 export function ensureProfilerStats(): any {
   const c = cc();
   if (!c) return null;
@@ -100,12 +100,12 @@ const STAT_LABELS: Record<(typeof STAT_KEYS)[number], string> = {
   bufferMemory: 'Buffer mem',
 };
 
-/** 读取 profiler.stats，并在缺失时回退 director/device 计数 */
+/** 讀取 profiler.stats，並在缺失時回退 director/device 計數 */
 export function readProfilerStats(): ProfilerStatItem[] {
   const c = cc();
   const stats = ensureProfilerStats();
   const device = c?.director?.root?.device;
-  const dt = Number(c?.director?.getDeltaTime?.() ?? c?.game?.deltaTime ?? 0);
+  const dt = Number(c?.game?.deltaTime ?? 0);
   const fallbacks: Record<string, number | null> = {
     fps: dt > 0 ? 1 / dt : null,
     draws: device?.numDrawCalls ?? null,
@@ -123,7 +123,7 @@ export function readProfilerStats(): ProfilerStatItem[] {
   });
 }
 
-/** 沿 uuid 路径从场景根查找节点 */
+/** 沿 uuid 路徑從場景根尋找節點 */
 export const resolveNodeByPath = (path: string[]): any => {
   let node: any = getScene();
   for (const uuid of path) {
@@ -133,7 +133,7 @@ export const resolveNodeByPath = (path: string[]): any => {
   return node;
 };
 
-/** 将节点/组件输出到游戏页 window.temp1、temp2... 方便在预览页控制台操作 */
+/** 將節點/元件輸出到遊戲頁 window.temp1、temp2... 方便在預覽頁主控台操作 */
 export const outputToConsole = (target: any): void => {
   const w = gameWindow();
   let i = 1;
@@ -143,7 +143,7 @@ export const outputToConsole = (target: any): void => {
   if (w !== window) console.log('temp' + i, target);
 };
 
-/** 在场景中高亮绘制节点包围盒，2s 后自动销毁 */
+/** 在場景中標示繪製節點包圍盒，2s 後自動銷毀 */
 export const drawNodeRect = (target: any): void => {
   const c = cc();
   if (!c) return;

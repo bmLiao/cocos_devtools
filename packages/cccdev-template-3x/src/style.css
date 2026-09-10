@@ -1,4 +1,4 @@
-/* ── CSS 变量（与 preview-template 主题保持一致） ── */
+/* ── CSS 變數（與 preview-template 主題保持一致） ── */
 :root {
   --bg-base: #16161e;
   --bg-panel: #1c1c28;
@@ -27,7 +27,7 @@ body,
   background: var(--bg-base);
 }
 
-/* ── 满版主容器（独立弹窗） ── */
+/* ── 滿版主容器（獨立彈窗） ── */
 #cc-devtools {
   position: fixed;
   inset: 0;
@@ -43,7 +43,7 @@ body,
   overflow: hidden;
 }
 
-/* ── GitHub 链接 ── */
+/* ── GitHub 連結 ── */
 .ccdev-github {
   position: absolute;
   top: 6px;
@@ -125,7 +125,7 @@ body,
   box-sizing: border-box;
 }
 
-/* ── Panel 标题 ── */
+/* ── Panel 標題 ── */
 .panel-header {
   height: 32px;
   line-height: 32px;
@@ -139,7 +139,7 @@ body,
   flex-shrink: 0;
 }
 
-/* ── 节点树面板 ── */
+/* ── 節點樹面板 ── */
 .tree-panel {
   display: flex;
   flex-direction: column;
@@ -148,7 +148,7 @@ body,
   height: 100%;
 }
 
-/* ── 搜索栏 ── */
+/* ── 搜尋列 ── */
 .tree-search-bar {
   display: flex;
   align-items: center;
@@ -297,7 +297,7 @@ body,
   color: var(--text-primary);
 }
 
-/* ── 属性面板 ── */
+/* ── 屬性面板 ── */
 .prop-panel {
   display: flex;
   flex-direction: column;
@@ -337,7 +337,7 @@ body,
   margin: 2px 0;
 }
 
-/* ── 组件折叠块 ── */
+/* ── 元件摺疊塊 ── */
 .comp-panel {
   border-bottom: 1px solid var(--border);
 }
@@ -387,7 +387,7 @@ body,
   cursor: pointer;
 }
 
-/* ── 属性行 ── */
+/* ── 屬性行 ── */
 .prop-row {
   display: flex;
   align-items: center;
@@ -400,7 +400,7 @@ body,
 }
 
 .prop-name {
-  width: 72px;
+  width: 88px;
   flex-shrink: 0;
   color: var(--text-muted);
   font-size: 11px;
@@ -413,6 +413,24 @@ body,
   flex: 1;
   display: flex;
   align-items: center;
+  min-width: 0;
+}
+
+.prop-row.prop-row-vec {
+  height: auto;
+  min-height: 26px;
+  padding: 3px 8px;
+}
+
+.prop-vec {
+  display: flex;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+}
+.prop-vec .prop-input {
+  flex: 1;
+  min-width: 0;
 }
 
 .prop-input {
@@ -451,7 +469,7 @@ body,
   font-size: 11px;
 }
 
-/* ── 通用图标按钮 ── */
+/* ── 通用圖示按鈕 ── */
 .icon-btn {
   height: 20px;
   min-width: 20px;
@@ -473,7 +491,7 @@ body,
   color: var(--accent-light);
 }
 
-/* ── Profiler 浮层 ── */
+/* ── Profiler 浮層 ── */
 .profiler-float {
   position: fixed;
   width: 220px;
@@ -523,7 +541,7 @@ body,
   font-size: 12px;
 }
 
-/* ── 数字输入框去掉 spin ── */
+/* ── 數字輸入框去掉 spin ── */
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;

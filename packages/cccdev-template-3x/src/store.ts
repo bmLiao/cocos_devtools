@@ -1,15 +1,15 @@
 import { signal, computed } from '@preact/signals';
 
-/** 当前选中的 cc.Node */
+/** 目前選取的 cc.Node */
 export const selectedNode = signal<any>(null);
 
-/** 每帧 toggle（1 / -1），驱动属性面板重渲 */
+/** 每幀 toggle（1 / -1），驅動屬性面板重繪 */
 export const updateTick = signal<number>(1);
 
-/** Profiler 浮窗是否展开 */
+/** Profiler 浮窗是否展開 */
 export const profilerOpen = signal<boolean>(false);
 
-/** 节点树数据（每帧重建） */
+/** 節點樹資料（每幀重建） */
 export interface TreeNode {
   uuid: string;
   name: string;
@@ -19,11 +19,11 @@ export interface TreeNode {
 }
 export const treeData = signal<TreeNode[]>([]);
 
-/** 已展开节点的 uuid 集合 */
+/** 已展開節點的 uuid 集合 */
 export const expandedUuids = signal<Set<string>>(new Set());
 
-/** 是否有节点被选中且有效 */
+/** 是否有節點被選取且有效 */
 export const hasSelection = computed(() => selectedNode.value !== null);
 
-/** 节点搜索关键词 */
+/** 節點搜尋關鍵詞 */
 export const searchQuery = signal<string>('');

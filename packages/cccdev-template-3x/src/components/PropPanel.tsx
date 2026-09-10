@@ -12,8 +12,8 @@ export function PropPanel() {
   if (!node.value || !isValid(node.value)) {
     return (
       <div class="prop-panel">
-        <div class="panel-header">属性</div>
-        <div class="prop-empty">未选中节点</div>
+        <div class="panel-header">屬性</div>
+        <div class="prop-empty">未選取節點</div>
       </div>
     );
   }
@@ -23,9 +23,9 @@ export function PropPanel() {
 
   return (
     <div class="prop-panel">
-      <div class="panel-header">属性</div>
+      <div class="panel-header">屬性</div>
       <div class="prop-scroll">
-        {/* 节点基础属性 */}
+        {/* 節點基礎屬性 */}
         <div class="comp-panel">
           <div class="comp-header">
             <input
@@ -38,10 +38,10 @@ export function PropPanel() {
             />
             <span class="comp-name">Node</span>
             <div style="flex:1" />
-            <button class="icon-btn" title="高亮节点" onClick={() => drawNodeRect(ccNode)}>
+            <button class="icon-btn" title="標示節點" onClick={() => drawNodeRect(ccNode)}>
               ⊡
             </button>
-            <button class="icon-btn" title="输出到控制台" onClick={() => outputToConsole(ccNode)}>
+            <button class="icon-btn" title="輸出到主控台" onClick={() => outputToConsole(ccNode)}>
               &gt;
             </button>
           </div>
@@ -54,7 +54,7 @@ export function PropPanel() {
 
         <div class="divider" />
 
-        {/* 组件列表 */}
+        {/* 元件列表 */}
         {components.map(({ name, target }) => (
           <ComponentPanel key={name} name={name} component={target} updateKey={tick.value} />
         ))}

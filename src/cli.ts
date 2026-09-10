@@ -7,15 +7,15 @@ const pkg = require('../package.json');
 function printHelp() {
   log.info(`cccdev v${pkg.version}`);
   console.log();
-  console.log('Usage: cccdev <command> [options]');
+  console.log('用法: cccdev <command> [options]');
   console.log();
-  console.log('Commands:');
-  console.log('  init          Install devtools preview template into a Cocos Creator project');
+  console.log('指令:');
+  console.log('  init          將 devtools 預覽範本安裝到 Cocos Creator 專案');
   console.log();
-  console.log('Options:');
-  console.log('  --help, -h    Show this help message');
-  console.log('  --version     Show version');
-  console.log('  --force       Overwrite existing preview-template without prompting');
+  console.log('選項:');
+  console.log('  --help, -h    顯示此說明');
+  console.log('  --version     顯示版本');
+  console.log('  --force       覆蓋已存在的 preview-template（不詢問）');
 }
 
 export async function run() {
@@ -47,7 +47,7 @@ export async function run() {
       await init({ force: !!values.force });
       break;
     default:
-      log.error(`Unknown command: ${command}`);
+      log.error(`未知指令: ${command}`);
       printHelp();
       process.exit(1);
   }

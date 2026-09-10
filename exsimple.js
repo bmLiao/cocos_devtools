@@ -1,12 +1,12 @@
 function launchRemoteDevTools() {
-  // 1. 打開新視窗
+  // 1. 開啟新視窗
   const devWin = window.open(
     '',
     'CCDevToolsRemote',
     'width=450,height=900,location=no,menubar=no,status=no,toolbar=no,resizable=yes',
   );
   if (!devWin) {
-    alert('彈出視窗被阻擋，請允許此網站的彈出視窗');
+    alert('彈出視窗被攔截，請允許此網站的彈出視窗');
     return;
   }
 
@@ -33,12 +33,12 @@ function launchRemoteDevTools() {
   devWin.document.close();
 
   // 4. 建立引擎代理
-  // 讓彈出視窗可以直接訪問原視窗的 Cocos 對象
+  // 讓彈出視窗可以直接存取原視窗的 Cocos 物件
   devWin.cc = window.cc;
   devWin.Editor = window.Editor;
 
   // 5. 注入 JS 腳本 (同樣使用絕對路徑)
-  // 請將下方的路徑替換成您實際的 cc-devtools.js 位置
+  // 請將下方的路徑換成您實際的 cc-devtools.js 位置
   const jsPath = new URL('./devtools/assets/index.js', window.location.href).href;
   const script = devWin.document.createElement('script');
   script.src = jsPath;

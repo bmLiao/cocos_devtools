@@ -1,15 +1,35 @@
 import type { PropDef } from './NodeModel';
+import { isInspectableValue } from '../propInspect';
 
 export interface ComponentViewModel {
   props: PropDef[];
+  /** 手寫 Model：不過濾屬性。通用反射為 true，只留可完整編輯的欄位 */
+  inspectableOnly?: boolean;
   [key: string]: any;
+}
+
+const SKIP_KEYS = new Set([
+  'uuid',
+  'name',
+  'enabled',
+  'node',
+  'info',
+  'hideFlags',
+  '__scriptAsset',
+  '__editorExtras__',
+]);
+
+/** cc.UITransformComponent → cc.UITransform（相容 3.x 早期類名） */
+export function normalizeClassName(name: string): string {
+  return (name ?? '').replace(/Component$/, '');
 }
 
 export function getComponentViewModel(
   name: string,
   componentGetter: () => any,
 ): ComponentViewModel | null {
-  switch (name) {
+  const normalized = normalizeClassName(name);
+  switch (normalized) {
     case 'cc.UITransform':
       return new CCUITransformModel(componentGetter);
     case 'cc.Label':
@@ -17,8 +37,83 @@ export function getComponentViewModel(
     case 'cc.Sprite':
       return new CCSpriteModel(componentGetter);
     default:
-      return null;
+      return createGenericViewModel(componentGetter);
   }
+}
+
+function prettify(key: string): string {
+  return key
+    .replace(/^_/, '')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/^./, (s) => s.toUpperCase());
+}
+
+function shouldSkipKey(key: string): boolean {
+  if (!key) return true;
+  if (key.includes('__')) return true;
+  if (key.startsWith('_')) return true;
+  return SKIP_KEYS.has(key);
+}
+
+function collectPropKeys(comp: any): string[] {
+  const keys: string[] = [];
+  const add = (k: unknown) => {
+    if (typeof k !== 'string' || shouldSkipKey(k) || keys.includes(k)) return;
+    keys.push(k);
+  };
+
+  const ctor = comp?.constructor;
+  if (Array.isArray(ctor?.__props__)) ctor.__props__.forEach(add);
+  if (Array.isArray(ctor?.__values__)) ctor.__values__.forEach(add);
+
+  const attrs = ctor?.__attrs__;
+  if (attrs && typeof attrs === 'object') {
+    for (const k of Object.keys(attrs)) {
+      const base = k.split('$_$')[0];
+      if (base) add(base);
+    }
+  }
+
+  if (keys.length === 0) {
+    for (const k of Object.keys(comp ?? {})) add(k);
+  }
+
+  return keys.filter((k) => {
+    try {
+      if (typeof comp[k] === 'function') return false;
+      return isInspectableValue(comp[k]);
+    } catch {
+      return false;
+    }
+  });
+}
+
+function createGenericViewModel(componentGetter: () => any): ComponentViewModel | null {
+  const comp = componentGetter();
+  if (!comp) return null;
+
+  const keys = collectPropKeys(comp);
+  if (keys.length === 0) return null;
+
+  const model: ComponentViewModel = {
+    inspectableOnly: true,
+    props: keys.map((key) => ({ name: prettify(key), key })),
+  };
+
+  for (const key of keys) {
+    Object.defineProperty(model, key, {
+      enumerable: true,
+      get() {
+        return componentGetter()?.[key];
+      },
+      set(v) {
+        const target = componentGetter();
+        if (target) target[key] = v;
+      },
+    });
+  }
+
+  return model;
 }
 
 class CCUITransformModel implements ComponentViewModel {

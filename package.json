@@ -1,9 +1,15 @@
 {
   "name": "cccdev",
-  "version": "1.0.3",
-  "description": "Chrome extension for Cocos Creator preview debugging",
+  "version": "1.0.9",
+  "cccdev": {
+    "versionBase": "1.0"
+  },
+  "description": "Chrome 擴充：Cocos Creator 預覽頁除錯工具",
   "license": "MIT",
-  "author": "potato47",
+  "author": "BM <cit49836085@gmail.com>",
+  "contributors": [
+    "potato47 (https://github.com/potato47/ccc-devtools)"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/potato47/ccc-devtools"
