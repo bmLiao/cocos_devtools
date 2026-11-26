@@ -1,6 +1,6 @@
 {
   "name": "cccdev",
-  "version": "1.0.9",
+  "version": "1.1.12",
   "cccdev": {
     "versionBase": "1.1"
   },
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/potato47/ccc-devtools"
+    "url": "https://github.com/bmLiao/cocos_devtools.git"
   },
   "bin": {
     "cccdev": "./bin/cccdev.ts"

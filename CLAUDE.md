@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`cccdev` is a Chrome extension that opens a dedicated popup window for Cocos Creator browser-preview debugging. Clicking the action icon injects a MAIN-world launcher into the current tab (same idea as `exsimple.js`): if `window.cc` exists, it `window.open`s a chrome-less window, assigns `devWin.cc = window.cc`, and mounts the Preact DevTools UI fullscreen. The popup closes when the preview page unloads or refreshes. If that origin had DevTools open, the service worker re-injects after the next load and opens again once the engine is ready.
+`cccdev` is a Chrome extension for Cocos Creator browser-preview debugging plus site-wide sticky notes (Snippet). Left-click on the action icon does nothing; the right-click menu toggles sticky notes, opens/closes DevTools, and picks window mode (PiP vs popup). Choosing DevTools injects a MAIN-world launcher into the current tab (same idea as `exsimple.js`): if `window.cc` exists, it opens a chrome-less window (or Document PiP), assigns `devWin.cc = window.cc`, and mounts the Preact DevTools UI fullscreen. The popup closes when the preview page unloads or refreshes. If that origin had DevTools open, the service worker re-injects after the next load and opens again once the engine is ready.
 
-The UI lives in `packages/cccdev-template-3x/` and is built as an IIFE via Vite. Extension static files (`manifest.json`, `background.js`, icons) are copied into repo-root `dist/` at build time. Load `dist/` as an unpacked extension.
+The UI lives in `packages/cccdev-template-3x/` and is built as an IIFE via Vite. Extension static files (`manifest.json`, `background.js`, icons, `snippet/`) are copied into repo-root `dist/` at build time. Load `dist/` as an unpacked extension.
 
 ## Commands
 
@@ -33,7 +33,7 @@ After build: Chrome → `chrome://extensions` → Developer mode → Load unpack
 
 ### Two-part structure
 
-1. **Chrome extension** (`packages/cccdev-template-3x/extension/` + built `dist/`) — MV3 service worker handles icon clicks, per-origin auto-open, fetches UI assets, and `chrome.scripting.executeScript({ world: 'MAIN' })` to launch the popup from the game page.
+1. **Chrome extension** (`packages/cccdev-template-3x/extension/` + built `dist/`) — MV3 service worker handles action context menus (sticky notes + DevTools toggle + window mode), per-origin auto-open, and `chrome.scripting.executeScript({ world: 'MAIN' })` to launch the popup from the game page. Sticky notes use `content_scripts` under `extension/snippet/`.
 
 2. **DevTools UI** (`packages/cccdev-template-3x/src/`) — private Preact app built as IIFE via Vite. Output: `dist/assets/{index.js,style.css}`.
 
@@ -55,7 +55,7 @@ An extension page cannot hold a live reference to the tab's `cc` object. The lau
 - Tree data rebuilt every frame via `requestAnimationFrame` loop
 - Property inputs are uncontrolled with ref-based external sync (only when not focused)
 - Preview `pagehide`/`beforeunload` closes the popup window; a remembered origin auto-opens after engine init
-- Closing via the icon or the popup X clears that origin's auto-open flag
+- Closing via the action menu or the popup X clears that origin's auto-open flag
 
 ## Conventions
 

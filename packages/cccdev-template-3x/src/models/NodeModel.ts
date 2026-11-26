@@ -7,7 +7,7 @@ export interface PropDef {
 
 export class NodeModel {
   static readonly props: PropDef[] = [
-    { name: 'Name', key: 'nodeName' },
+    { name: 'Layer', key: 'layer' },
     { name: 'X', key: 'x' },
     { name: 'Y', key: 'y' },
     { name: 'Z', key: 'z' },
@@ -20,11 +20,11 @@ export class NodeModel {
     return selectedNode.value;
   }
 
-  static get nodeName(): string {
-    return this.node?.name ?? '';
+  static get layer(): number {
+    return this.node?.layer ?? 0;
   }
-  static set nodeName(v: string) {
-    if (this.node) this.node.name = v;
+  static set layer(v: number) {
+    if (this.node) this.node.layer = v;
   }
 
   static get x(): number {

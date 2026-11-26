@@ -2,7 +2,7 @@ import { useComputed } from '@preact/signals';
 import { selectedNode, updateTick } from '../store';
 import { isValid, getComponents, outputToConsole, drawNodeRect } from '../engine';
 import { NodeModel } from '../models/NodeModel';
-import { PropItem } from './PropItem';
+import { PropRowsView } from './PropItem';
 import { ComponentPanel } from './ComponentPanel';
 
 export function PropPanel() {
@@ -36,7 +36,9 @@ export function PropPanel() {
                 ccNode.active = (e.target as HTMLInputElement).checked;
               }}
             />
-            <span class="comp-name">Node</span>
+            <span class="comp-name" title="cc.Node">
+              {ccNode.name || '（未命名）'}
+            </span>
             <div style="flex:1" />
             <button class="icon-btn" title="標示節點" onClick={() => drawNodeRect(ccNode)}>
               ⊡
@@ -46,9 +48,7 @@ export function PropPanel() {
             </button>
           </div>
           <div class="comp-props">
-            {NodeModel.props.map((prop) => (
-              <PropItem key={prop.key} model={NodeModel} propName={prop.name} propKey={prop.key} />
-            ))}
+            <PropRowsView className="cc.Node" model={NodeModel} component={ccNode} />
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
-import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from 'fs';
+import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync, readdirSync } from 'fs';
 import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -56,9 +56,27 @@ function copyExtensionStatic() {
   manifest.version = version;
   writeFileSync(join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
   cpSync(join(extDir, 'background.js'), join(outDir, 'background.js'));
+  const readmeSrc = join(extDir, '說明檔案.md');
+  if (existsSync(readmeSrc)) {
+    cpSync(readmeSrc, join(outDir, '說明檔案.md'));
+  }
   const iconsSrc = join(extDir, 'icons');
   if (existsSync(iconsSrc)) {
     cpSync(iconsSrc, join(outDir, 'icons'), { recursive: true });
+  }
+  const tablesSrc = join(extDir, 'assets');
+  const tablesDest = join(outDir, 'assets');
+  if (existsSync(tablesSrc)) {
+    mkdirSync(tablesDest, { recursive: true });
+    for (const name of readdirSync(tablesSrc)) {
+      if (!name.endsWith('.json')) continue;
+      const parsed = JSON.parse(readFileSync(join(tablesSrc, name), 'utf8')) as unknown;
+      writeFileSync(join(tablesDest, name), JSON.stringify(parsed, null, 2) + '\n');
+    }
+  }
+  const snippetSrc = join(extDir, 'snippet');
+  if (existsSync(snippetSrc)) {
+    cpSync(snippetSrc, join(outDir, 'snippet'), { recursive: true });
   }
 }
 

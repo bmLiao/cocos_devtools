@@ -109,8 +109,11 @@ function captureWindowBox(win: Window, base: LayoutState): LayoutState {
     next.h = Math.round(win.outerHeight);
     next.iw = Math.round(win.innerWidth);
     next.ih = Math.round(win.innerHeight);
-    next.x = Math.round(win.screenX);
-    next.y = Math.round(win.screenY);
+    // 子母畫面座標由系統管，勿覆寫泡泡模式記住的位置
+    if (!isPipWindow(win)) {
+      next.x = Math.round(win.screenX);
+      next.y = Math.round(win.screenY);
+    }
     capturePanes(win, next);
   }
   return next;
@@ -127,17 +130,26 @@ export function saveWindowLayout(win: Window = window): void {
   writeLayout({}, win);
 }
 
-/** 用儲存的外框與螢幕座標還原（resizeTo = outer，moveTo = screenX/Y） */
+function isPipWindow(win: Window): boolean {
+  try {
+    return (win as Window & { __ccDevToolsWindowMode?: string }).__ccDevToolsWindowMode === 'pip';
+  } catch {
+    return false;
+  }
+}
+
+/** 用儲存的外框與螢幕座標還原（resizeTo = outer，moveTo = screenX/Y）；子母畫面略過座標 */
 export function applySavedWindowBox(win: Window = window): boolean {
   const layout = readApplyLayout();
   if (!win || win.closed) return false;
+  const pip = isPipWindow(win);
   try {
     if (layout.w > 200 && layout.h > 200) {
       if (Math.abs(win.outerWidth - layout.w) > 8 || Math.abs(win.outerHeight - layout.h) > 8) {
         win.resizeTo(layout.w, layout.h);
       }
     }
-    if (Math.abs(win.screenX - layout.x) > 8 || Math.abs(win.screenY - layout.y) > 8) {
+    if (!pip && (Math.abs(win.screenX - layout.x) > 8 || Math.abs(win.screenY - layout.y) > 8)) {
       win.moveTo(layout.x, layout.y);
     }
     return true;

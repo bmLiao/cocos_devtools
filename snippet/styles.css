@@ -1,0 +1,218 @@
+/* 防護全域繼承隔離樣式 */
+.snippet_controls_container,
+.snippet_controls_container *,
+.snippet_panel,
+.snippet_panel *,
+.snippet_note,
+.snippet_note * {
+  box-sizing: border-box !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  line-height: 1.4 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+/* 右下角浮動主按鈕 (支援自由拖曳) */
+.snippet_control_toggle_btn {
+  position: fixed !important;
+  z-index: 999999 !important;
+  padding: 8px 16px !important;
+  background: #2196F3 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 20px !important;
+  cursor: move !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+  font-weight: bold !important;
+  min-height: 36px !important;
+  min-width: 50px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  touch-action: none !important;
+  user-select: none !important;
+  transition: opacity 0.2s ease !important;
+}
+
+/* 右下角按鈕收合時設為 60% 透明 */
+.snippet_control_toggle_btn.snippet_btn_folded {
+  opacity: 0.6 !important;
+}
+
+/* 面板樣式 */
+.snippet_panel {
+  position: fixed !important;
+  z-index: 999999 !important;
+  width: 270px !important;
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+.snippet_panel.snippet_hidden {
+  display: none !important;
+}
+.snippet_panel_row {
+  display: flex !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+.snippet_panel_row_stretch {
+  align-items: stretch !important;
+}
+.snippet_panel_row label {
+  font-size: 12px !important;
+  width: 65px !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+.snippet_panel_row input[type="text"] {
+  flex-grow: 1 !important;
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #555 !important;
+  border-radius: 4px !important;
+  min-width: 0 !important;
+  height: auto !important;
+}
+.snippet_panel_row input[type="text"]:focus {
+  outline: none !important;
+  border-color: #2196F3 !important;
+}
+.snippet_panel_row input[type="color"] {
+  border: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  cursor: pointer !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+.snippet_btn {
+  flex: 1 !important;
+  padding: 6px 10px !important;
+  color: #ffffff !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  border-radius: 4px !important;
+  font-weight: bold !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+}
+.snippet_btn_icon {
+  flex: 0 0 32px !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+}
+.snippet_btn_green { background: #4caf50 !important; }
+.snippet_btn_red { background: #f44336 !important; }
+.snippet_btn_yellow { background: #f39c12 !important; }
+.snippet_btn_orange { background: #ff9800 !important; }
+
+/* 便條紙樣式 */
+.snippet_note {
+  position: fixed !important;
+  min-width: 140px !important;
+  background: #fffd88;
+  border: 1px solid #ccc !important;
+  padding: 0 !important;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.3) !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  z-index: 999990 !important;
+  touch-action: none !important;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* 折疊狀態樣式：寬度為文字寬度 + 左右各 16px、隱藏按鈕、內文與時間、無法拖曳 */
+.snippet_note.snippet_folded {
+  opacity: 0.6 !important;
+  min-width: auto !important;
+  width: max-content !important;
+  cursor: default !important;
+}
+.snippet_note.snippet_folded .snippet_note_header {
+  padding: 2px 16px !important; /* 左右保留 16px 邊距 */
+  cursor: default !important;
+}
+.snippet_note.snippet_folded .snippet_note_header h4 {
+  padding: 0 !important;
+}
+.snippet_note.snippet_folded .snippet_note_content,
+.snippet_note.snippet_folded .snippet_timestamp,
+.snippet_note.snippet_folded .snippet_drag_btn,
+.snippet_note.snippet_folded .snippet_delete_btn {
+  display: none !important;
+}
+
+.snippet_note_header {
+  background: #f6e58d;
+  display: flex !important;
+  align-items: center !important;
+  padding: 2px 4px !important;
+  user-select: none !important;
+}
+.snippet_note_header h4 {
+  margin: 0 !important;
+  padding: 0 5px !important;
+  font-size: 14px !important;
+  flex-grow: 1 !important;
+  outline: none !important;
+  color: inherit !important;
+  border: none !important;
+  background: transparent !important;
+}
+.snippet_note_header button {
+  font-size: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+  margin-left: 2px !important;
+  border-radius: 2px !important;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 0 !important;
+  touch-action: none !important;
+}
+.snippet_drag_btn {
+  background: #88f !important;
+  color: #ffffff !important;
+  cursor: move !important;
+}
+.snippet_delete_btn {
+  background: #f55 !important;
+  color: #ffffff !important;
+}
+.snippet_note_content {
+  padding: 4px 5px !important;
+}
+.snippet_note textarea {
+  width: 100% !important;
+  width: -webkit-fill-available !important;
+  border: none !important;
+  background: transparent !important;
+  resize: none !important;
+  outline: none !important;
+  font-size: 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+.snippet_timestamp {
+  font-size: 10px !important;
+  color: #555555;
+  text-align: right !important;
+  margin: 0 5px 4px !important;
+  padding: 0 !important;
+}

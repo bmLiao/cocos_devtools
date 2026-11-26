@@ -1,5 +1,6 @@
 import type { PropDef } from './NodeModel';
 import { isInspectableValue } from '../propInspect';
+import { prettifyPropKey } from '../propLabels';
 
 export interface ComponentViewModel {
   props: PropDef[];
@@ -41,17 +42,12 @@ export function getComponentViewModel(
   }
 }
 
-function prettify(key: string): string {
-  return key
-    .replace(/^_/, '')
-    .replace(/([a-z])([A-Z])/g, '$1 $2')
-    .replace(/^./, (s) => s.toUpperCase());
-}
-
 function shouldSkipKey(key: string): boolean {
   if (!key) return true;
   if (key.includes('__')) return true;
   if (key.startsWith('_')) return true;
+  // Widget 的 editorTop 等是編輯器預覽用，與 top/bottom/left/right 重複
+  if (/^editor[A-Z]/.test(key)) return true;
   return SKIP_KEYS.has(key);
 }
 
@@ -93,11 +89,9 @@ function createGenericViewModel(componentGetter: () => any): ComponentViewModel 
   if (!comp) return null;
 
   const keys = collectPropKeys(comp);
-  if (keys.length === 0) return null;
-
   const model: ComponentViewModel = {
     inspectableOnly: true,
-    props: keys.map((key) => ({ name: prettify(key), key })),
+    props: keys.map((key) => ({ name: prettifyPropKey(key), key })),
   };
 
   for (const key of keys) {

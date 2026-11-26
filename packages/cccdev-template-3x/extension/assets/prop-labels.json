@@ -1,0 +1,393 @@
+{
+  "_comment": "屬性顯示名稱對照表。不進 JS 壓縮，建置時原樣複製到 dist/assets/prop-labels.json。改完重新整理擴充並重開彈窗即可。$name 為元件面板標題；* 為所有元件共用。也可為自訂腳本類名加條目。",
+  "cc.Node": {
+    "$name": "節點",
+    "$groups": [
+      {
+        "label": "座標",
+        "keys": [
+          "x",
+          "y",
+          "z"
+        ]
+      },
+      {
+        "label": "縮放",
+        "keys": [
+          "scaleX",
+          "scaleY",
+          "scaleZ"
+        ]
+      }
+    ],
+    "layer": "圖層",
+    "x": "X",
+    "y": "Y",
+    "z": "Z",
+    "scaleX": "縮放 X",
+    "scaleY": "縮放 Y",
+    "scaleZ": "縮放 Z"
+  },
+  "cc.UITransform": {
+    "$name": "UITransform",
+    "$groups": [
+      {
+        "label": "寬高",
+        "keys": [
+          "width",
+          "height"
+        ]
+      },
+      {
+        "label": "錨點",
+        "keys": [
+          "anchorX",
+          "anchorY"
+        ]
+      }
+    ],
+    "width": "寬度",
+    "height": "高度",
+    "anchorX": "錨點 X",
+    "anchorY": "錨點 Y",
+    "priority": "優先順序"
+  },
+  "cc.Label": {
+    "$name": "Label",
+    "$keys": [
+      "string",
+      "font",
+      "useSystemFont",
+      "color",
+      "fontSize",
+      "lineHeight",
+      "spacingX",
+      "horizontalAlign",
+      "verticalAlign",
+      "overflow",
+      "enableWrapText",
+      "isBold",
+      "isItalic",
+      "isUnderline",
+      "enableOutline",
+      "outlineColor",
+      "outlineWidth",
+      "enableShadow",
+      "shadowColor",
+      "shadowOffset",
+      "shadowBlur",
+      "cacheMode"
+    ],
+    "$groups": [
+      {
+        "label": "字級",
+        "keys": ["fontSize", "lineHeight", "spacingX"],
+        "cells": ["大小", "行高", "字距"]
+      },
+      {
+        "label": "對齊",
+        "keys": ["horizontalAlign", "verticalAlign"],
+        "cells": ["水平", "垂直"]
+      },
+      {
+        "label": "樣式",
+        "keys": ["isBold", "isItalic", "isUnderline"],
+        "cells": ["粗體", "斜體", "底線"]
+      },
+      {
+        "label": "描邊",
+        "keys": ["enableOutline", "outlineWidth"],
+        "cells": ["啟用", "寬度"]
+      }
+    ],
+    "string": "文字",
+    "font": {
+      "label": "字型",
+      "display": "name",
+      "print": true,
+      "show": true
+    },
+    "useSystemFont": "系統字",
+    "color": "顏色",
+    "fontSize": "字級",
+    "lineHeight": "行高",
+    "spacingX": "字距",
+    "horizontalAlign": "水平對齊",
+    "verticalAlign": "垂直對齊",
+    "overflow": "溢位",
+    "enableWrapText": "自動換行",
+    "isBold": "粗體",
+    "isItalic": "斜體",
+    "isUnderline": "底線",
+    "enableOutline": "描邊",
+    "outlineColor": "描邊色",
+    "outlineWidth": "描邊寬",
+    "enableShadow": "陰影",
+    "shadowColor": "陰影色",
+    "shadowOffset": "陰影偏移",
+    "shadowBlur": "陰影模糊",
+    "cacheMode": "快取模式"
+  },
+  "cc.Sprite": {
+    "$name": "Sprite",
+    "color": "顏色",
+    "spriteFrame": {
+      "label": "圖集幀",
+      "display": "name",
+      "print": true,
+      "show": true
+    },
+    "type": "類型",
+    "sizeMode": "尺寸模式",
+    "trim": "裁切透明",
+    "grayscale": "灰階",
+    "fillType": "填充類型",
+    "fillCenter": "填充中心",
+    "fillStart": "填充起點",
+    "fillRange": "填充範圍"
+  },
+  "cc.Widget": {
+    "$name": "Widget",
+    "$keys": [
+      "alignMode",
+      "isAlignTop",
+      "isAlignBottom",
+      "isAlignLeft",
+      "isAlignRight",
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "isAlignHorizontalCenter",
+      "isAlignVerticalCenter",
+      "horizontalCenter",
+      "verticalCenter",
+      "isAbsoluteTop",
+      "isAbsoluteBottom",
+      "isAbsoluteLeft",
+      "isAbsoluteRight",
+      "isAbsoluteHorizontalCenter",
+      "isAbsoluteVerticalCenter"
+    ],
+    "$groups": [
+      {
+        "label": "對齊邊",
+        "keys": ["isAlignTop", "isAlignBottom", "isAlignLeft", "isAlignRight"],
+        "cells": ["上", "下", "左", "右"]
+      },
+      {
+        "label": "邊距",
+        "keys": ["top", "bottom", "left", "right"],
+        "cells": ["上", "下", "左", "右"]
+      },
+      {
+        "label": "置中對齊",
+        "keys": ["isAlignHorizontalCenter", "isAlignVerticalCenter"],
+        "cells": ["水平", "垂直"]
+      },
+      {
+        "label": "置中偏移",
+        "keys": ["horizontalCenter", "verticalCenter"],
+        "cells": ["水平", "垂直"]
+      },
+      {
+        "label": "邊距為絕對值",
+        "keys": ["isAbsoluteTop", "isAbsoluteBottom", "isAbsoluteLeft", "isAbsoluteRight"],
+        "cells": ["上", "下", "左", "右"]
+      },
+      {
+        "label": "置中為絕對值",
+        "keys": ["isAbsoluteHorizontalCenter", "isAbsoluteVerticalCenter"],
+        "cells": ["水平", "垂直"]
+      }
+    ],
+    "alignMode": "對齊模式",
+    "isAlignTop": "對齊上",
+    "isAlignBottom": "對齊下",
+    "isAlignLeft": "對齊左",
+    "isAlignRight": "對齊右",
+    "isAlignVerticalCenter": "垂直置中",
+    "isAlignHorizontalCenter": "水平置中",
+    "top": "上",
+    "bottom": "下",
+    "left": "左",
+    "right": "右",
+    "horizontalCenter": "水平偏移",
+    "verticalCenter": "垂直偏移",
+    "isAbsoluteTop": "上為絕對值",
+    "isAbsoluteBottom": "下為絕對值",
+    "isAbsoluteLeft": "左為絕對值",
+    "isAbsoluteRight": "右為絕對值",
+    "isAbsoluteHorizontalCenter": "水平為絕對值",
+    "isAbsoluteVerticalCenter": "垂直為絕對值"
+  },
+  "cc.Button": {
+    "$name": "Button",
+    "interactable": "可互動",
+    "transition": "過渡",
+    "duration": "時長",
+    "zoomScale": "縮放倍率"
+  },
+  "cc.Layout": {
+    "$name": "Layout",
+    "$keys": [
+      "type",
+      "resizeMode",
+      "paddingTop",
+      "paddingBottom",
+      "paddingLeft",
+      "paddingRight",
+      "spacingX",
+      "spacingY",
+      "startAxis",
+      "horizontalDirection",
+      "verticalDirection",
+      "constraint",
+      "constraintNum",
+      "cellSize",
+      "affectedByScale"
+    ],
+    "$groups": [
+      {
+        "label": "內距",
+        "keys": ["paddingTop", "paddingBottom", "paddingLeft", "paddingRight"],
+        "cells": ["上", "下", "左", "右"]
+      },
+      {
+        "label": "間距",
+        "keys": ["spacingX", "spacingY"],
+        "cells": ["水平", "垂直"]
+      }
+    ],
+    "type": "排列類型",
+    "resizeMode": "縮放模式",
+    "paddingLeft": "內距左",
+    "paddingRight": "內距右",
+    "paddingTop": "內距上",
+    "paddingBottom": "內距下",
+    "spacingX": "間距 X",
+    "spacingY": "間距 Y",
+    "startAxis": "起始軸",
+    "horizontalDirection": "水平方向",
+    "verticalDirection": "垂直方向",
+    "constraint": "約束",
+    "constraintNum": "約束數量",
+    "cellSize": "格子尺寸",
+    "affectedByScale": "受縮放影響"
+  },
+  "cc.UIOpacity": {
+    "$name": "UIOpacity",
+    "opacity": "透明度"
+  },
+  "cc.RichText": {
+    "$name": "RichText",
+    "string": "文字",
+    "fontSize": "字級",
+    "fontColor": "顏色",
+    "maxWidth": "最大寬度",
+    "lineHeight": "行高",
+    "handleTouchEvent": "處理點擊"
+  },
+  "cc.EditBox": {
+    "$name": "EditBox",
+    "string": "文字",
+    "placeholder": "佔位文字",
+    "fontSize": "字級",
+    "fontColor": "字色",
+    "placeholderFontSize": "佔位字級",
+    "placeholderFontColor": "佔位字色",
+    "maxLength": "最大長度",
+    "inputFlag": "輸入旗標",
+    "inputMode": "輸入模式",
+    "returnType": "Return 類型"
+  },
+  "cc.ProgressBar": {
+    "$name": "ProgressBar",
+    "totalLength": "總長度",
+    "progress": "進度",
+    "mode": "模式",
+    "reverse": "反向"
+  },
+  "cc.Slider": {
+    "$name": "Slider",
+    "progress": "進度",
+    "direction": "方向"
+  },
+  "cc.Toggle": {
+    "$name": "Toggle",
+    "isChecked": "勾選",
+    "interactable": "可互動"
+  },
+  "cc.ScrollView": {
+    "$name": "ScrollView",
+    "horizontal": "水平",
+    "vertical": "垂直",
+    "inertia": "慣性",
+    "brake": "煞車",
+    "elastic": "彈性",
+    "bounceDuration": "回彈時長",
+    "cancelInnerEvents": "取消內部事件"
+  },
+  "cc.Mask": {
+    "$name": "Mask",
+    "type": "類型",
+    "inverted": "反轉",
+    "segments": "段數"
+  },
+  "cc.Graphics": {
+    "$name": "Graphics",
+    "lineWidth": "線寬",
+    "lineJoin": "線連接",
+    "lineCap": "線端點",
+    "strokeColor": "描邊色",
+    "fillColor": "填充色",
+    "miterLimit": "斜接限制"
+  },
+  "cc.Camera": {
+    "$name": "Camera",
+    "priority": "優先順序",
+    "visibility": "可見性",
+    "clearColor": "清除色",
+    "projection": "投影",
+    "fov": "FOV",
+    "orthoHeight": "正交高度",
+    "near": "近平面",
+    "far": "遠平面"
+  },
+  "cc.Canvas": {
+    "$name": "Canvas",
+    "alignCanvasWithScreen": "對齊螢幕"
+  },
+  "cc.LabelOutline": {
+    "$name": "描邊",
+    "$keys": ["color", "width"],
+    "color": "顏色",
+    "width": "寬度"
+  },
+  "cc.LabelShadow": {
+    "$name": "陰影",
+    "$keys": ["color", "offset", "blur"],
+    "color": "顏色",
+    "blur": "模糊",
+    "offset": "偏移"
+  },
+  "cc.BlockInputEvents": {
+    "$name": "BlockInputEvents"
+  },
+  "cc.Animation": {
+    "$name": "Animation",
+    "playOnLoad": "載入時播放"
+  },
+  "cc.AudioSource": {
+    "$name": "AudioSource",
+    "loop": "循環",
+    "playOnAwake": "喚醒時播放",
+    "volume": "音量"
+  },
+  "*": {
+    "color": "顏色",
+    "opacity": "透明度",
+    "enabled": "啟用",
+    "interactable": "可互動"
+  }
+}

@@ -1,8 +1,8 @@
 import { render } from 'preact';
 import { App } from './components/App';
+import { loadPropLabels } from './propLabels';
 import './style.css';
 
-// 等待 DOM 就緒後掛載
 function mount() {
   const container = document.getElementById('cc-devtools-root');
   if (container) {
@@ -10,8 +10,15 @@ function mount() {
   }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', mount);
-} else {
+async function start() {
+  await loadPropLabels();
   mount();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    void start();
+  });
+} else {
+  void start();
 }

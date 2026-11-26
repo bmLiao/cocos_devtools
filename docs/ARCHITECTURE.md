@@ -2,17 +2,19 @@
 
 本文說明 `cccdev` 如何以 Chrome 擴充形式，把目前預覽頁的 `window.cc` 注入獨立彈窗並執行 DevTools UI。面向需要改注入邏輯、擴充屬性編輯器或理解建置產物的開發者。
 
-使用者安裝說明見倉庫根目錄 [README.md](../README.md)。
+使用者安裝說明見倉庫根目錄 [README.md](../README.md)。目錄與便條紙功能見 [PROJECTS.md](./PROJECTS.md)。
 
 ## 1. 專案定位
 
-`cccdev` 的主產物是 **Chrome 擴充**。點擊工具列圖示後：
+`cccdev` 的主產物是 **Chrome 擴充**（DevTools + 便條紙）。工具列**左鍵無作用**；**右鍵**選單可開關便條紙與 DevTools。開啟 DevTools 時：
 
 1. 在目前分頁的頁面主世界（MAIN world）偵測 `window.cc`
-2. 偵測成功則 `window.open` 一個固定彈窗（滿版顯示 UI）
-3. 把遊戲頁的 `cc` / `Editor` 賦給彈窗（與 `exsimple.js` 相同）
-4. 將建置出的 CSS + JS 寫入彈窗並掛載 Preact 面板
-5. 預覽頁 `pagehide` / `beforeunload` 時關閉彈窗
+2. 依右鍵選單選定的視窗模式開啟（預設**子母畫面** Document PiP；可選**泡泡** `window.open`）
+3. 把遊戲頁的 `cc` / `Editor` 賦給該視窗（與 `exsimple.js` 相同）
+4. 將建置出的 CSS + JS 寫入視窗並掛載 Preact 面板
+5. 預覽頁 `pagehide` / `beforeunload` 時關閉視窗
+
+便條紙以 `content_scripts` 注入一般網頁（`dist/snippet/`），顯示狀態由右鍵核取方塊與 `snippet_ui_visible` 控制。
 
 擴充頁無法直接持有頁面裡的 `cc` 物件（隔離世界 / 跨源）。必須從頁面主世界開啟子視窗並賦值參照，UI 才能讀寫引擎。
 
@@ -28,18 +30,10 @@
 ```
 ccc-devtools/
 ├── dist/                                 # bun run build 輸出（gitignore）
-│   ├── manifest.json
-│   ├── background.js
-│   ├── icons/
-│   └── assets/{index.js,style.css}
-├── packages/cccdev-template-3x/
-│   ├── src/                              # DevTools UI
-│   ├── extension/                        # MV3 靜態檔案
-│   │   ├── manifest.json
-│   │   ├── background.js                 # 圖示點擊 + MAIN world 啟動器
-│   │   └── icons/
-│   └── vite.config.ts
-└── src/ + bin/                           # 舊 CLI，不再作為主建置路徑
+├── packages/cccdev-template-3x/          # 擴充原始碼（含 extension/snippet/）
+├── snippet/                              # 已棄用：勿再 Load unpacked
+├── src/ + bin/                           # 舊 CLI，不再作為主建置路徑
+└── docs/PROJECTS.md                      # 目錄與功能說明
 ```
 
 根 `tsconfig.json` 排除 `packages/`，CLI 與範本各自 type-check。
@@ -50,8 +44,8 @@ ccc-devtools/
 packages/cccdev-template-3x
         │  gen-icons + tsc --noEmit && vite build
         ▼
-  dist/assets/{index.js, style.css}     ← Vite IIFE
-  dist/{manifest.json, background.js, icons/}  ← closeBundle 複製
+  dist/assets/{index.js, style.css, prop-labels.json}
+  dist/{manifest.json, background.js, icons/, snippet/, 說明檔案.md}  ← closeBundle 複製
         │
         ▼
   Chrome「載入未封裝項目」→ dist/
@@ -60,13 +54,14 @@ packages/cccdev-template-3x
 - Vite `build.lib.formats: ['iife']`，全域名 `CCDevTools`，入口 `src/main.tsx`。
 - `outDir` 為倉庫根 `dist/`，CSS 不拆包。
 - 前兩碼來自根目錄 `package.json` 的 `cccdev.versionBase`；建置時第三碼 +1（不進位），寫入 `dist/manifest.json`，彈窗標題顯示同一版本。
-- `background.js` 在點擊時立刻 `executeScript`（不先 `fetch`，以免丟失使用者手勢導致彈窗被攔）。
-- 彈窗透過 `web_accessible_resources` 載入 `chrome-extension://…/assets/{index.js,style.css}`，與 `exsimple.js` 的 `<link>` + `<script src>` 相同。
+- `background.js` 在右鍵選單觸發時立刻 `executeScript`（不先 `fetch`，以免丟失使用者手勢導致彈窗被攔）。
+- 彈窗透過 `web_accessible_resources` 載入 `chrome-extension://…/assets/{index.js,style.css,prop-labels.json}`，與 `exsimple.js` 的 `<link>` + `<script src>` 相同。屬性顯示名稱表為未壓縮 JSON，不打進 IIFE。
+- 便條紙 `extension/snippet/` 原樣複製到 `dist/snippet/`，由 manifest `content_scripts` 載入。
 
 ## 4. 擴充注入流程
 
 ```
-點擊 action
+右鍵 action →「開啟／關閉 Cocos DevTools」
     │
     ▼
 background.js
@@ -77,7 +72,7 @@ background.js
     │  彈出被攔 → console.error
     │  已有視窗 → 關閉（再開則還原尺寸）
     ▼
-window.open(固定尺寸、無工具列)
+window.open / Document PiP
     │  document.write 最小 HTML（#cc-devtools-root）
     │  注入 window.cc = 遊戲頁.cc
     │  注入 <script> IIFE → mount App
@@ -88,7 +83,7 @@ window.open(固定尺寸、無工具列)
 
 頁面重新整理 / 關閉時，遊戲頁上的 `pagehide` / `beforeunload` 監聽會 `devWin.close()`。
 
-再次點擊同一頁：若彈窗仍在則關閉；已關閉則重新偵測 `cc` 並開啟。成功開啟後把該網域寫入 `chrome.storage.local`（`autoOpenOrigins`）；`tabs.onUpdated` 在頁面 `complete` 時若該網域已記錄，則以 `open` 模式注入並等到引擎就緒（scene / `game_inited`，否則 `cc` 出現後 12 秒）再 `window.open`。點圖示關閉或使用者關掉彈窗（MAIN 偵測後 `postMessage` → isolated bridge）會清掉該網域紀錄。安裝後仍不會對未記錄的網域注入。
+再次選「開啟／關閉」同一頁：若彈窗仍在則關閉；已關閉則重新偵測 `cc` 並開啟。成功開啟後把該網域寫入 `chrome.storage.local`（`autoOpenOrigins`）；`tabs.onUpdated` 在頁面 `complete` 時若該網域已記錄，則以 `open` 模式注入並等到引擎就緒（scene / `game_inited`，否則 `cc` 出現後 12 秒）再開啟視窗。用選單關閉或使用者關掉彈窗（MAIN 偵測後 `postMessage` → isolated bridge）會清掉該網域紀錄。安裝後仍不會對未記錄的網域注入。
 
 ## 5. DevTools UI 模組
 
@@ -148,4 +143,4 @@ App
 - 無法在 `chrome://`、Web Store 等頁面注入
 - 彈窗被瀏覽器攔截時必須由使用者允許彈出視窗
 - `dist/` 不進 git，改 UI 後需重新 `bun run build` 再在 `chrome://extensions` 重新整理擴充
-- 目前沒有自動化測試；需在真實 Creator 瀏覽器預覽上點擴充圖示驗證
+- 目前沒有自動化測試；需在真實 Creator 瀏覽器預覽上右鍵擴充圖示驗證
